@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useGame } from '@/store/useGame'
 import { trueCount } from '@/lib/engine'
 import { fmt } from '@/lib/i18n'
@@ -19,12 +19,16 @@ const navItems = [
   { to: '/about', key: 'navAbout' as const, end: false },
 ]
 
+const WIDE_ROUTES = ['/', '/learn', '/about']
+
 export default function Layout({ children }: { children: ReactNode }) {
   const s = useGame()
   const { bank, settings, rc, shoe, t } = s
   const lang = settings.lang
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [statsOpen, setStatsOpen] = useState(false)
+  const location = useLocation()
+  const isWide = WIDE_ROUTES.includes(location.pathname)
 
   let countBadge: string
   if (settings.countMode === 'visible') {
@@ -37,7 +41,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="wrap">
+    <div className={'wrap' + (isWide ? ' wrap-wide' : '')}>
       <header className="app-header">
         <div className="h-top">
           <Link to="/" className="brand">
